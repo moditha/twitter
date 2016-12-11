@@ -18,6 +18,7 @@ public class TestWrite {
 		try {
 			Paging page = new Paging (1, 500);
 			statuses = twitter.getHomeTimeline(page);
+			//twitter.getFriendsl
 			System.out.println("Showing home timeline.");
 			int i=0;
 		    for (Status status1 : statuses) {

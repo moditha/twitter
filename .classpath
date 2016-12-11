@@ -48,5 +48,6 @@
 	<classpathentry kind="lib" path="F:/stanford-corenlp-full-2016-10-31/stanford-corenlp-full-2016-10-31/stanford-corenlp-3.7.0-sources.jar"/>
 	<classpathentry kind="lib" path="F:/stanford-corenlp-full-2016-10-31/stanford-corenlp-full-2016-10-31/xom.jar"/>
 	<classpathentry kind="lib" path="F:/stanford-corenlp-full-2016-10-31/stanford-corenlp-full-2016-10-31/xom-1.2.10-src.jar"/>
+	<classpathentry kind="lib" path="src/local-maven-repo/SentiStrengthCom.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

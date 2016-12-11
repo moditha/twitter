@@ -15,7 +15,7 @@ public class DAO {
 	private Session session;
 
 	public DAO() {
-		this.driver = GraphDatabase.driver("bolt://localhost", AuthTokens.basic("neo4j", "neo4jj"));
+		this.driver = GraphDatabase.driver("bolt://localhost", AuthTokens.basic("neo4j", "1234"));
 		this.session = driver.session();
 	}
 
@@ -67,6 +67,23 @@ public class DAO {
 		session.run(cmd, MapUtil.map("name", u.getName()));
 	}
 	
+	public String getTweet(long tweetId){
+		String text="";
+		String cmd = "MATCH (n:Tweet)where id(n)= "+tweetId+" RETURN n.text";
+		StatementResult result = session.run(cmd);
+		while ( result.hasNext() )
+		{
+		Record record = result.next();
+		//System.out.println(record.get( "n.text" ).asString() );
+		text= record.get( "n.text" ).asString();
+		}
+		return text;
+	}
+
+	public void saveNER(){
+		
+	}
+	
 	public void AddUser(User user){
 		String cmd = "MERGE (u:user {" + "user_id:"+user.getId()+" }) SET u.name={name}";
 		session.run(cmd, MapUtil.map("name", user.getName()));
@@ -96,6 +113,4 @@ public class DAO {
 		this.session.close();
 		this.driver.close();
 	}
-
-	
 }

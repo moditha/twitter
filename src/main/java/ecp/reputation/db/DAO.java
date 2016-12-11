@@ -2,6 +2,7 @@ package ecp.reputation.db;
 
 import org.neo4j.helpers.collection.MapUtil;
 
+import java.util.List;
 import java.util.Map;
 
 import org.neo4j.driver.v1.*;
@@ -35,14 +36,14 @@ public class DAO {
 		Record record = result.next();
 		long id = record.get("id(t)").asLong();
 
-		AddUser(id, u);
+		AddUserForTweet(id, u);
 		for (HashtagEntity tag : tweet.getHashtagEntities()) {
-			AddHashtag(id, tag);
+			AddHashtagforTweet(id, tag);
 		}
 
 	}
 
-	public void AddHashtag(long tweetId, HashtagEntity hashTag) {
+	public void AddHashtagforTweet(long tweetId, HashtagEntity hashTag) {
 		// MERGE (h:Hashtag {text:"WOW"}) WITH (h) as y
 		// MATCH (tw:Tweet) where id(tw)=203
 		// MERGE (tw)-[r:hasHashtag]->(y)
@@ -51,13 +52,12 @@ public class DAO {
 		session.run(cmd, MapUtil.map("hash", hashTag.getText()));
 	}
 
-	public void AddUser(long tweetId, User u) {
+	public void AddUserForTweet(long tweetId, User u) {
 
 //		u.getName()
 //		u.getScreenName()
 //		u.getFollowersCount()
 //		u.getFriendsCount()
-		
 		String cmd = "MERGE (u:user {" + "user_id:"+u.getId()+" })"
 				+ "   WITH u MATCH (tw:Tweet) where id(tw)=" + tweetId
 				+ "   MERGE (u)-[r:tweeted]->(tw) "
@@ -83,6 +83,32 @@ public class DAO {
 	public void saveNER(){
 		
 	}
+	
+	public void AddUser(User user){
+		String cmd = "MERGE (u:user {" + "user_id:"+user.getId()+" }) SET u.name={name}";
+		session.run(cmd, MapUtil.map("name", user.getName()));
+	}
+	
+	public void AddUserFollowers(long userId, List<User> followers){
+		for (User user : followers) {
+			String cmd = "MERGE (u:user {" + "user_id:"+user.getId()+" })"
+					+ "   WITH u MATCH (u2:user) where (u2.user_id)=" + userId
+					+ "   MERGE (u)-[r:follows]->(u2) "
+					+ " SET u.name={name}";
+			session.run(cmd, MapUtil.map("name", user.getName()));
+		}		
+	}
+	
+	public void AddUserFriends(long userId, List<User> friends){
+		for (User user : friends) {
+			String cmd = "MERGE (u:user {" + "user_id:"+user.getId()+" })"
+					+ "   WITH u MATCH (u2:user) where (u2.user_id)=" + userId
+					+ "   MERGE (u2)-[r:follows]->(u) "
+					+ " SET u.name={name}";
+			session.run(cmd, MapUtil.map("name", user.getName()));
+		}		
+	}
+
 	public void closeConnection() {
 		this.session.close();
 		this.driver.close();

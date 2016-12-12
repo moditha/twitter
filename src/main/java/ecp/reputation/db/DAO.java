@@ -2,6 +2,8 @@ package ecp.reputation.db;
 
 import org.neo4j.helpers.collection.MapUtil;
 
+import ecp.reputation.sentiment.SentimentScore;
+
 import java.util.List;
 import java.util.Map;
 
@@ -107,6 +109,12 @@ public class DAO {
 					+ " SET u.name={name}";
 			session.run(cmd, MapUtil.map("name", user.getName()));
 		}		
+	}
+	
+	public void saveSentiment(SentimentScore score){
+		String cmd = "MERGE (tw:Tweet) where id(tw)="+ score.tweetId
+				+ " SET tw.positive="+ score.positive+ " tw.negative="+ score.negative;
+		session.run(cmd);
 	}
 
 	public void closeConnection() {

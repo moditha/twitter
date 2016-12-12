@@ -1,6 +1,7 @@
 package ecp.reputation.sentiment;
 
 public class SentimentScore {
-	int positive;
-	int negative;
+	public long tweetId;
+	public int positive;
+	public int negative;
 }

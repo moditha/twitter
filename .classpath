@@ -44,7 +44,6 @@
 	<classpathentry kind="lib" path="src/local-maven-repo/slf4j-api.jar"/>
 	<classpathentry kind="lib" path="src/local-maven-repo/slf4j-simple.jar"/>
 	<classpathentry kind="lib" path="src/local-maven-repo/stanford-corenlp-3.7.0-javadoc.jar"/>
-	<classpathentry kind="lib" path="src/local-maven-repo/stanford-corenlp-3.7.0-models.jar"/>
 	<classpathentry kind="lib" path="src/local-maven-repo/stanford-corenlp-3.7.0-sources.jar"/>
 	<classpathentry kind="lib" path="src/local-maven-repo/stanford-corenlp-3.7.0.jar"/>
 	<classpathentry kind="lib" path="src/local-maven-repo/xom-1.2.10-src.jar"/>

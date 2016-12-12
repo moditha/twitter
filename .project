@@ -24,7 +24,7 @@
 		<link>
 			<name>src/local-maven-repo/stanford-corenlp-3.7.0-models.jar</name>
 			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/notes/IIR/stanford-corenlp-full-2016-10-31/stanford-corenlp-3.7.0-models.jar</locationURI>
+			<location>C:/NER/stanford-corenlp-3.7.0-models.jar</location>
 		</link>
 	</linkedResources>
 </projectDescription>

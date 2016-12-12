@@ -6,7 +6,7 @@ public class SentimentScorer {
  
 	SentiStrength sentiStrength;
 	public SentimentScorer() {
-		SentiStrength sentiStrength = new SentiStrength();
+		sentiStrength = new SentiStrength();
 		String ssthInitialisation[] = { "sentidata", "C:/SentStrength_Data/" };
 		sentiStrength.initialise(ssthInitialisation);
 	}

@@ -3,6 +3,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import ecp.reputation.db.DAO;
+import ecp.reputation.enums.NERtypesEnum;
 import edu.stanford.nlp.dcoref.CorefChain;
 import edu.stanford.nlp.dcoref.CorefCoreAnnotations.CorefChainAnnotation;
 import edu.stanford.nlp.ling.CoreLabel;
@@ -51,7 +52,11 @@ public class TestNER {
 	        // this is the NER label of the token
 	        String ne = token.get(NamedEntityTagAnnotation.class);
 	        
-	        System.out.println("word: " + word + " ne:" + ne);
+	     //  System.out.println("word: " + word + " ne:" + ne);	                
+	      if (ne == "PERSON"){
+	    	  System.out.println("word: " + word + " ne:" + ne);
+	      };
+	      
 	      }}}}
 
 	      // this is the parse tree of the current sentence

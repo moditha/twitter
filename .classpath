@@ -33,7 +33,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="F:/stanford-corenlp-full-2016-10-31/stanford-corenlp-full-2016-10-31/ejml-0.23.jar"/>
-	<classpathentry kind="lib" path="src/local-maven-repo/SentiStrengthCom.jar"/>
 	<classpathentry kind="lib" path="F:/stanford-corenlp-full-2016-10-31/stanford-corenlp-full-2016-10-31/javax.json.jar"/>
 	<classpathentry kind="lib" path="F:/stanford-corenlp-full-2016-10-31/stanford-corenlp-full-2016-10-31/javax.json-api-1.0-sources.jar"/>
 	<classpathentry kind="lib" path="F:/stanford-corenlp-full-2016-10-31/stanford-corenlp-full-2016-10-31/joda-time.jar"/>

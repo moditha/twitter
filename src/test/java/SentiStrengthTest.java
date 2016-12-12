@@ -8,10 +8,10 @@ public class SentiStrengthTest {
 		//Method 2: One initialisation and repeated classifications
 		SentiStrength sentiStrength = new SentiStrength(); 
 		//Create an array of command line parameters to send (not text or file to process)
-		String ssthInitialisation[] = {"sentidata", "C:/SentStrength_Data/", "explain"};
+		String ssthInitialisation[] = {"sentidata", "C:/SentStrength_Data/"};
 		sentiStrength.initialise(ssthInitialisation);
 
-System.out.println(sentiStrength.computeSentimentScores("I hate frogs.")); 
+System.out.println(sentiStrength.computeSentimentScores("I hate frogs.").split(" ")[0]); 
 System.out.println(sentiStrength.computeSentimentScores("I love dogs.")); 
 
 

@@ -20,4 +20,11 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.m2e.core.maven2Nature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>src/local-maven-repo/stanford-corenlp-3.7.0-models.jar</name>
+			<type>1</type>
+			<location>C:/NER/stanford-corenlp-3.7.0-models.jar</location>
+		</link>
+	</linkedResources>
 </projectDescription>

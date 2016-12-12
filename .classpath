@@ -32,22 +32,21 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="F:/stanford-corenlp-full-2016-10-31/stanford-corenlp-full-2016-10-31/ejml-0.23.jar"/>
-	<classpathentry kind="lib" path="F:/stanford-corenlp-full-2016-10-31/stanford-corenlp-full-2016-10-31/javax.json.jar"/>
-	<classpathentry kind="lib" path="F:/stanford-corenlp-full-2016-10-31/stanford-corenlp-full-2016-10-31/javax.json-api-1.0-sources.jar"/>
-	<classpathentry kind="lib" path="F:/stanford-corenlp-full-2016-10-31/stanford-corenlp-full-2016-10-31/joda-time.jar"/>
-	<classpathentry kind="lib" path="F:/stanford-corenlp-full-2016-10-31/stanford-corenlp-full-2016-10-31/joda-time-2.9-sources.jar"/>
-	<classpathentry kind="lib" path="F:/stanford-corenlp-full-2016-10-31/stanford-corenlp-full-2016-10-31/jollyday.jar"/>
-	<classpathentry kind="lib" path="F:/stanford-corenlp-full-2016-10-31/stanford-corenlp-full-2016-10-31/jollyday-0.4.9-sources.jar"/>
-	<classpathentry kind="lib" path="F:/stanford-corenlp-full-2016-10-31/stanford-corenlp-full-2016-10-31/protobuf.jar"/>
-	<classpathentry kind="lib" path="F:/stanford-corenlp-full-2016-10-31/stanford-corenlp-full-2016-10-31/slf4j-api.jar"/>
-	<classpathentry kind="lib" path="F:/stanford-corenlp-full-2016-10-31/stanford-corenlp-full-2016-10-31/slf4j-simple.jar"/>
-	<classpathentry kind="lib" path="F:/stanford-corenlp-full-2016-10-31/stanford-corenlp-full-2016-10-31/stanford-corenlp-3.7.0.jar"/>
-	<classpathentry kind="lib" path="F:/stanford-corenlp-full-2016-10-31/stanford-corenlp-full-2016-10-31/stanford-corenlp-3.7.0-javadoc.jar"/>
-	<classpathentry kind="lib" path="F:/stanford-corenlp-full-2016-10-31/stanford-corenlp-full-2016-10-31/stanford-corenlp-3.7.0-models.jar"/>
-	<classpathentry kind="lib" path="F:/stanford-corenlp-full-2016-10-31/stanford-corenlp-full-2016-10-31/stanford-corenlp-3.7.0-sources.jar"/>
-	<classpathentry kind="lib" path="F:/stanford-corenlp-full-2016-10-31/stanford-corenlp-full-2016-10-31/xom.jar"/>
-	<classpathentry kind="lib" path="F:/stanford-corenlp-full-2016-10-31/stanford-corenlp-full-2016-10-31/xom-1.2.10-src.jar"/>
+	<classpathentry kind="lib" path="src/local-maven-repo/ejml-0.23.jar"/>
+	<classpathentry kind="lib" path="src/local-maven-repo/javax.json-api-1.0-sources.jar"/>
+	<classpathentry kind="lib" path="src/local-maven-repo/javax.json.jar"/>
+	<classpathentry kind="lib" path="src/local-maven-repo/joda-time-2.9-sources.jar"/>
+	<classpathentry kind="lib" path="src/local-maven-repo/joda-time.jar"/>
+	<classpathentry kind="lib" path="src/local-maven-repo/jollyday-0.4.9-sources.jar"/>
+	<classpathentry kind="lib" path="src/local-maven-repo/jollyday.jar"/>
+	<classpathentry kind="lib" path="src/local-maven-repo/protobuf.jar"/>
 	<classpathentry kind="lib" path="src/local-maven-repo/SentiStrengthCom.jar"/>
+	<classpathentry kind="lib" path="src/local-maven-repo/slf4j-api.jar"/>
+	<classpathentry kind="lib" path="src/local-maven-repo/slf4j-simple.jar"/>
+	<classpathentry kind="lib" path="src/local-maven-repo/stanford-corenlp-3.7.0-javadoc.jar"/>
+	<classpathentry kind="lib" path="src/local-maven-repo/stanford-corenlp-3.7.0-sources.jar"/>
+	<classpathentry kind="lib" path="src/local-maven-repo/stanford-corenlp-3.7.0.jar"/>
+	<classpathentry kind="lib" path="src/local-maven-repo/xom-1.2.10-src.jar"/>
+	<classpathentry kind="lib" path="src/local-maven-repo/xom.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

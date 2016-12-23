@@ -1,7 +1,10 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import ecp.reputation.NER.NERObject;
+import ecp.reputation.NER.TwitterEntities;
 import ecp.reputation.db.DAO;
 import ecp.reputation.enums.NERtypesEnum;
 import edu.stanford.nlp.dcoref.CorefChain;
@@ -29,7 +32,7 @@ public class TestNER {
 	    props.put("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
 	    StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
 	    
-	    String text =db.getTweet(2);
+	    String text =db.getTweet(70);
 	    
 	 // create an empty Annotation just with the given text
 	    Annotation document = new Annotation(text);
@@ -40,7 +43,11 @@ public class TestNER {
 	    // these are all the sentences in this document
 	    // a CoreMap is essentially a Map that uses class objects as keys and has values with custom types
 	    List<CoreMap> sentences = document.get(SentencesAnnotation.class);
-
+	    
+	    TwitterEntities tweetlist = new TwitterEntities();
+	  tweetlist.tweetId = 2;
+	  tweetlist.entities = new ArrayList<NERObject>();
+	    
 	    for(CoreMap sentence: sentences) {
 	      // traversing the words in the current sentence
 	      // a CoreLabel is a CoreMap with additional token-specific methods
@@ -52,12 +59,57 @@ public class TestNER {
 	        // this is the NER label of the token
 	        String ne = token.get(NamedEntityTagAnnotation.class);
 	        
-	     //  System.out.println("word: " + word + " ne:" + ne);	                
-	      if (ne == "PERSON"){
-	    	  System.out.println("word: " + word + " ne:" + ne);
-	      };
+	     // System.out.println("word: " + word + " ne:" + ne);	                
+	        if (ne.equals("PERSON")){
+	        	NERObject person = new NERObject();
+	        	person.type=NERtypesEnum.PERSON;
+	        	person.text = word;
+	        	tweetlist.entities.add(person);
+	        	
+	      }else {if (ne.equals("ORGANIZATION")){
+	    	  NERObject org = new NERObject();
+	        	org.type=NERtypesEnum.ORGANIZATION;
+	        	org.text = word;
+	        	tweetlist.entities.add(org);
+	        	
+	      } else {if (ne.equals("MISC")){
+	    	  NERObject misc = new NERObject();
+	        	misc.type=NERtypesEnum.MISC;
+	        	misc.text = word;
+	        	tweetlist.entities.add(misc);
 	      
-	      }}}}
+	    	  } else {if (ne.equals("LOCATION")){
+		    	  NERObject loc = new NERObject();
+		        	loc.type=NERtypesEnum.LOCATION;
+		        	loc.text = word;
+		        	tweetlist.entities.add(loc);
+		        	
+	    	  } else {if (ne.equals("MONEY")){
+		    	  NERObject money = new NERObject();
+		    	  money.type=NERtypesEnum.MONEY;
+		    	  money.text = word;
+		    	  tweetlist.entities.add(money);
+		    	  
+	    	  } else {if (ne.equals("PERCENT")){
+		    	  NERObject percent = new NERObject();
+		    	  percent.type=NERtypesEnum.PERCENT;
+		    	  percent.text = word;
+		    	  tweetlist.entities.add(percent);
+		    	  
+	    	  } else {if (ne.equals("DATE")){
+		    	  NERObject date = new NERObject();
+		    	  date.type=NERtypesEnum.DATE;
+		    	  date.text = word; 
+		    	  tweetlist.entities.add(date);
+		    	  
+	    	  } else {if (ne.equals("TIME")){
+		    	  NERObject time = new NERObject();
+		    	  time.type=NERtypesEnum.TIME;
+		    	  time.text = word;  
+		    	  tweetlist.entities.add(time);}
+	    	 
+	    	  }}}}}}}}} }}
+
 
 	      // this is the parse tree of the current sentence
 	    //  Tree tree = sentence.get(TreeAnnotation.class);

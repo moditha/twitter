@@ -2,6 +2,7 @@ package ecp.reputation.db;
 
 import org.neo4j.helpers.collection.MapUtil;
 
+import ecp.reputation.NER.TwitterEntities;
 import ecp.reputation.sentiment.SentimentScore;
 
 import java.util.List;
@@ -102,8 +103,13 @@ public class DAO {
 		return text;
 	}
 
-	public void saveNER(){
-		
+	public void saveNER(TwitterEntities e){
+		String cmd = "MERGE (e:entity {" + "text:'"+e.entities.get(0).text+"' })"
+				+ "   WITH e MATCH (tw:Tweet) where id(tw)=" + e.tweetId
+				+ "   MERGE (tw)-[r:hasEntity]->(e) "
+				+ " SET e.type = '"+ e.entities.get(0).type+"'";
+		session.run(cmd);
+		System.out.println(cmd);
 	}
 	
 	public void AddUser(User user){
@@ -136,6 +142,8 @@ public class DAO {
 				+ " SET tw.positive="+ score.positive+ " tw.negative="+ score.negative;
 		session.run(cmd);
 	}
+	
+
 
 	public void closeConnection() {
 		this.session.close();

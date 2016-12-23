@@ -17,12 +17,13 @@ public class DAO {
 	private Session session;
 
 	public DAO() {
-		this.driver = GraphDatabase.driver("bolt://localhost", AuthTokens.basic("neo4j", "1234"));
+		this.driver = GraphDatabase.driver("bolt://localhost", AuthTokens.basic("neo4j", "neo4jj"));
 		this.session = driver.session();
 	}
 
-	public void AddTweet(Status tweet) {
+	public long AddTweet(Status tweet) {
 
+		if(tweet.getLang().equals("en")){
 		String cmd = "MERGE (t:Tweet {" + "id_str:" + tweet.getId() + "} ) " + " SET t.created_at="
 				+ tweet.getCreatedAt().getTime() + " SET t.text= {text}" + " SET t.fav_cnt=" + tweet.getFavoriteCount()
 				+ " Set t.retweet_cnt=" + tweet.getRetweetCount() + " return id(t)";
@@ -43,8 +44,27 @@ public class DAO {
 			AddHashtagforTweet(id, tag);
 		}
 
+		return id;
+		}
+		else{
+		System.out.println(tweet.getLang());
+			return 0;
+		
+		}
 	}
 
+	public void AddRetweet(Status reTweet, Status tweet){
+		long reTweetId=AddTweet(reTweet);
+		long origTweetId=AddTweet(tweet);
+		
+		String cmd = "MATCH (tw:Tweet) where id(tw)="+origTweetId
+				+ "   WITH tw MATCH (tw1:Tweet) where id(tw1)=" + reTweetId
+				+ "   MERGE (tw)-[r:hasRetweet]->(tw1) "
+				+ " SET tw1.isRetweet=true";
+		
+		session.run(cmd);
+	}
+	
 	public void AddHashtagforTweet(long tweetId, HashtagEntity hashTag) {
 		// MERGE (h:Hashtag {text:"WOW"}) WITH (h) as y
 		// MATCH (tw:Tweet) where id(tw)=203
@@ -112,7 +132,7 @@ public class DAO {
 	}
 	
 	public void saveSentiment(SentimentScore score){
-		String cmd = "MERGE (tw:Tweet) where id(tw)="+ score.tweetId
+		String cmd = "MATCH (tw:Tweet) where id(tw)="+ score.tweetId
 				+ " SET tw.positive="+ score.positive+ " tw.negative="+ score.negative;
 		session.run(cmd);
 	}

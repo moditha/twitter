@@ -5,6 +5,7 @@ import org.neo4j.helpers.collection.MapUtil;
 import ecp.reputation.NER.TwitterEntities;
 import ecp.reputation.sentiment.SentimentScore;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,9 +32,9 @@ public class DAO {
 		// System.out.println(driver);
 		// System.out.println(session);
 		// System.out.println(cmd);
-		
-		User u=tweet.getUser();
-		
+
+		User u = tweet.getUser();
+
 		StatementResult result = session.run(cmd, MapUtil.map("text", tweet.getText()));
 
 		Record record = result.next();
@@ -57,73 +58,81 @@ public class DAO {
 
 	public void AddUserForTweet(long tweetId, User u) {
 
-//		u.getName()
-//		u.getScreenName()
-//		u.getFollowersCount()
-//		u.getFriendsCount()
-		String cmd = "MERGE (u:user {" + "user_id:"+u.getId()+" })"
-				+ "   WITH u MATCH (tw:Tweet) where id(tw)=" + tweetId
-				+ "   MERGE (u)-[r:tweeted]->(tw) "
-				+ " SET u.name={name}";
-		
-		//System.out.println(cmd);
+		// u.getName()
+		// u.getScreenName()
+		// u.getFollowersCount()
+		// u.getFriendsCount()
+		String cmd = "MERGE (u:user {" + "user_id:" + u.getId() + " })" + "   WITH u MATCH (tw:Tweet) where id(tw)="
+				+ tweetId + "   MERGE (u)-[r:tweeted]->(tw) " + " SET u.name={name}";
+
+		// System.out.println(cmd);
 		session.run(cmd, MapUtil.map("name", u.getName()));
 	}
-	
-	public String getTweet(long tweetId){
-		String text="";
-		String cmd = "MATCH (n:Tweet)where id(n)= "+tweetId+" RETURN n.text";
+
+	public String getTweet(long tweetId) {
+		String text = "";
+		String cmd = "MATCH (n:Tweet)where id(n)= " + tweetId + " RETURN n.text";
 		StatementResult result = session.run(cmd);
-		while ( result.hasNext() )
-		{
-		Record record = result.next();
-		//System.out.println(record.get( "n.text" ).asString() );
-		text= record.get( "n.text" ).asString();
+		while (result.hasNext()) {
+			Record record = result.next();
+			// System.out.println(record.get( "n.text" ).asString() );
+			text = record.get("n.text").asString();
 		}
 		return text;
 	}
 
-	public void saveNER(TwitterEntities e){
-		String cmd = "MERGE (e:entity {" + "text:'"+e.entities.get(0).text+"' })"
-				+ "   WITH e MATCH (tw:Tweet) where id(tw)=" + e.tweetId
-				+ "   MERGE (tw)-[r:hasEntity]->(e) "
-				+ " SET e.type = '"+ e.entities.get(0).type+"'";
+	public void saveNER(TwitterEntities e) {
+		for (int i = 0; i < e.entities.size(); i++) {
+			String cmd = "MERGE (e:entity {" + "text:'" + e.entities.get(i).text + "' })"
+					+ "   WITH e MATCH (tw:Tweet) where id(tw)=" + e.tweetId + "   MERGE (tw)-[r:hasEntity]->(e) "
+					+ " SET e.type = '" + e.entities.get(i).type + "'";
+			session.run(cmd);
+			System.out.println(cmd);
+		}
+	}
+
+	public void AddUser(User user) {
+		String cmd = "MERGE (u:user {" + "user_id:" + user.getId() + " }) SET u.name={name}";
+		session.run(cmd, MapUtil.map("name", user.getName()));
+	}
+
+	public void AddUserFollowers(long userId, List<User> followers) {
+		for (User user : followers) {
+			String cmd = "MERGE (u:user {" + "user_id:" + user.getId() + " })"
+					+ "   WITH u MATCH (u2:user) where (u2.user_id)=" + userId + "   MERGE (u)-[r:follows]->(u2) "
+					+ " SET u.name={name}";
+			session.run(cmd, MapUtil.map("name", user.getName()));
+		}
+	}
+
+	public void AddUserFriends(long userId, List<User> friends) {
+		for (User user : friends) {
+			String cmd = "MERGE (u:user {" + "user_id:" + user.getId() + " })"
+					+ "   WITH u MATCH (u2:user) where (u2.user_id)=" + userId + "   MERGE (u2)-[r:follows]->(u) "
+					+ " SET u.name={name}";
+			session.run(cmd, MapUtil.map("name", user.getName()));
+		}
+	}
+
+	public void saveSentiment(SentimentScore score) {
+		String cmd = "MATCH (tw:Tweet) where id(tw)=" + score.tweetId + " SET tw.positive=" + score.positive
+				+ " SET tw.negative=" + score.negative;
 		session.run(cmd);
 		System.out.println(cmd);
 	}
-	
-	public void AddUser(User user){
-		String cmd = "MERGE (u:user {" + "user_id:"+user.getId()+" }) SET u.name={name}";
-		session.run(cmd, MapUtil.map("name", user.getName()));
-	}
-	
-	public void AddUserFollowers(long userId, List<User> followers){
-		for (User user : followers) {
-			String cmd = "MERGE (u:user {" + "user_id:"+user.getId()+" })"
-					+ "   WITH u MATCH (u2:user) where (u2.user_id)=" + userId
-					+ "   MERGE (u)-[r:follows]->(u2) "
-					+ " SET u.name={name}";
-			session.run(cmd, MapUtil.map("name", user.getName()));
-		}		
-	}
-	
-	public void AddUserFriends(long userId, List<User> friends){
-		for (User user : friends) {
-			String cmd = "MERGE (u:user {" + "user_id:"+user.getId()+" })"
-					+ "   WITH u MATCH (u2:user) where (u2.user_id)=" + userId
-					+ "   MERGE (u2)-[r:follows]->(u) "
-					+ " SET u.name={name}";
-			session.run(cmd, MapUtil.map("name", user.getName()));
-		}		
-	}
-	
-	public void saveSentiment(SentimentScore score){
-		String cmd = "MERGE (tw:Tweet) where id(tw)="+ score.tweetId
-				+ " SET tw.positive="+ score.positive+ " tw.negative="+ score.negative;
-		session.run(cmd);
-	}
-	
 
+	public ArrayList<Long> getNoScoreTweets() {
+		String cmd = "MATCH (n:Tweet) WHERE NOT EXISTS(n.positive) AND NOT EXISTS(n.negative) return id(n)";
+		StatementResult result = session.run(cmd);
+		System.out.println(cmd);
+		ArrayList<Long> idtweets = new ArrayList<Long>();
+		while (result.hasNext()) {
+			Record record = result.next();
+			idtweets.add(record.get("id(n)").asLong());
+			// text= record.get( "n.text" ).asString();
+		}
+		return idtweets;
+	}
 
 	public void closeConnection() {
 		this.session.close();

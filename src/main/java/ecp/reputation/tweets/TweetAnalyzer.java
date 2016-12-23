@@ -21,7 +21,7 @@ public class TweetAnalyzer {
 		String tweetText=db.getTweet(tweetId);
 		TwitterEntities tweetNER = NERtweet.NERrun(tweetText);
 		tweetNER.tweetId = tweetId;
-		System.out.println(tweetNER.entities.get(0).text);
+//		System.out.println(tweetNER.entities.get(0).text);
 		db.saveNER(tweetNER);
 	}
 	
@@ -30,5 +30,6 @@ public class TweetAnalyzer {
 		SentimentScore score=scorer.getSentimentScores(tweetText);
 		score.tweetId=tweetId;
 		db.saveSentiment(score);
+		System.out.println("saving score ->"+ score.positive);
 	}
 }

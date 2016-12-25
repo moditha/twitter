@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.neo4j.cypher.internal.compiler.v2_0.ast.IsNotNull;
+
 import ecp.reputation.enums.NERtypesEnum;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.ling.CoreAnnotations.NamedEntityTagAnnotation;
@@ -29,6 +31,8 @@ public class NERecognizer {
 		List<CoreMap> sentences = document.get(SentencesAnnotation.class);
 		TwitterEntities tweetlist = new TwitterEntities();
 		tweetlist.entities = new ArrayList<NERObject>();
+		String previousNe = "";
+		NERObject obj = new NERObject();
 		for (CoreMap sentence : sentences) {
 			// traversing the words in the current sentence
 			// a CoreLabel is a CoreMap with additional token-specific methods
@@ -40,62 +44,70 @@ public class NERecognizer {
 				// this is the NER label of the token
 				String ne = token.get(NamedEntityTagAnnotation.class);
 
-				// System.out.println("word: " + word + " ne:" + ne);
-				if (ne.equals("PERSON")) {
-					NERObject person = new NERObject();
-					person.type = NERtypesEnum.PERSON;
-					person.text = word;
-					tweetlist.entities.add(person);
+				if (previousNe.equals(ne) && (ne.equals("PERSON") || ne.equals("ORGANIZATION") || ne.equals("MISC")
+						|| ne.equals("LOCATION") || ne.equals("PERCENT") || ne.equals("DATE") || ne.equals("TIME"))) {
+					obj.text = obj.text + " " + word;
+				} else {
+					if (ne.equals("PERSON")) {
+						obj = new NERObject();
+						obj.type = NERtypesEnum.PERSON;
+						obj.text = word;
+						previousNe = ne;
+						tweetlist.entities.add(obj);
+					}
+					if (ne.equals("ORGANIZATION")) {
+						obj = new NERObject();
+						obj.type = NERtypesEnum.ORGANIZATION;
+						obj.text = word;
+						previousNe = ne;
+						tweetlist.entities.add(obj);
+					}
+					if (ne.equals("MISC")) {
+						obj = new NERObject();
+						obj.type = NERtypesEnum.MISC;
+						obj.text = word;
+						previousNe = ne;
+						tweetlist.entities.add(obj);
+					}
+					if (ne.equals("LOCATION")) {
+						obj = new NERObject();
+						obj.type = NERtypesEnum.LOCATION;
+						obj.text = word;
+						previousNe = ne;
+						tweetlist.entities.add(obj);
+					}
+					if (ne.equals("MONEY")) {
+						obj = new NERObject();
+						obj.type = NERtypesEnum.MONEY;
+						obj.text = word;
+						previousNe = ne;
+						tweetlist.entities.add(obj);
+					}
+					if (ne.equals("PERCENT")) {
+						obj = new NERObject();
+						obj.type = NERtypesEnum.PERCENT;
+						obj.text = word;
+						previousNe = ne;
+						tweetlist.entities.add(obj);
+					}
+					if (ne.equals("DATE")) {
+						obj = new NERObject();
+						obj.type = NERtypesEnum.DATE;
+						obj.text = word;
+						previousNe = ne;
+						tweetlist.entities.add(obj);
+					}
+					if (ne.equals("TIME")) {
+						obj = new NERObject();
+						obj.type = NERtypesEnum.TIME;
+						obj.text = word;
+						previousNe = ne;
+						tweetlist.entities.add(obj);
+					}
 				}
-				if (ne.equals("ORGANIZATION")) {
-					NERObject org = new NERObject();
-					org.type = NERtypesEnum.ORGANIZATION;
-					org.text = word;
-					tweetlist.entities.add(org);
-
-				}
-				if (ne.equals("MISC")) {
-					NERObject misc = new NERObject();
-					misc.type = NERtypesEnum.MISC;
-					misc.text = word;
-					tweetlist.entities.add(misc);
-
-				}
-				if (ne.equals("LOCATION")) {
-					NERObject loc = new NERObject();
-					loc.type = NERtypesEnum.LOCATION;
-					loc.text = word;
-					tweetlist.entities.add(loc);
-
-				}
-				if (ne.equals("MONEY")) {
-					NERObject money = new NERObject();
-					money.type = NERtypesEnum.MONEY;
-					money.text = word;
-					tweetlist.entities.add(money);
-
-				}
-				if (ne.equals("PERCENT")) {
-					NERObject percent = new NERObject();
-					percent.type = NERtypesEnum.PERCENT;
-					percent.text = word;
-					tweetlist.entities.add(percent);
-
-				}
-				if (ne.equals("DATE")) {
-					NERObject date = new NERObject();
-					date.type = NERtypesEnum.DATE;
-					date.text = word;
-					tweetlist.entities.add(date);
-
-				}
-				if (ne.equals("TIME")) {
-					NERObject time = new NERObject();
-					time.type = NERtypesEnum.TIME;
-					time.text = word;
-					tweetlist.entities.add(time);
-
-				}
+			}
+			if (obj.text != null) {
+				tweetlist.entities.add(obj);
 			}
 		}
 		return tweetlist;

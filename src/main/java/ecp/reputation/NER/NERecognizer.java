@@ -48,65 +48,63 @@ public class NERecognizer {
 						|| ne.equals("LOCATION") || ne.equals("PERCENT") || ne.equals("DATE") || ne.equals("TIME"))) {
 					obj.text = obj.text + " " + word;
 				} else {
+					if (obj.text != null ) {
+						tweetlist.entities.add(obj);
+						obj=new NERObject();
+						previousNe="";
+					}
+					
 					if (ne.equals("PERSON")) {
 						obj = new NERObject();
 						obj.type = NERtypesEnum.PERSON;
 						obj.text = word;
 						previousNe = ne;
-						tweetlist.entities.add(obj);
 					}
 					if (ne.equals("ORGANIZATION")) {
 						obj = new NERObject();
 						obj.type = NERtypesEnum.ORGANIZATION;
 						obj.text = word;
 						previousNe = ne;
-						tweetlist.entities.add(obj);
 					}
 					if (ne.equals("MISC")) {
 						obj = new NERObject();
 						obj.type = NERtypesEnum.MISC;
 						obj.text = word;
 						previousNe = ne;
-						tweetlist.entities.add(obj);
 					}
 					if (ne.equals("LOCATION")) {
 						obj = new NERObject();
 						obj.type = NERtypesEnum.LOCATION;
 						obj.text = word;
 						previousNe = ne;
-						tweetlist.entities.add(obj);
 					}
 					if (ne.equals("MONEY")) {
 						obj = new NERObject();
 						obj.type = NERtypesEnum.MONEY;
 						obj.text = word;
 						previousNe = ne;
-						tweetlist.entities.add(obj);
 					}
 					if (ne.equals("PERCENT")) {
 						obj = new NERObject();
 						obj.type = NERtypesEnum.PERCENT;
 						obj.text = word;
 						previousNe = ne;
-						tweetlist.entities.add(obj);
 					}
 					if (ne.equals("DATE")) {
 						obj = new NERObject();
 						obj.type = NERtypesEnum.DATE;
 						obj.text = word;
 						previousNe = ne;
-						tweetlist.entities.add(obj);
 					}
 					if (ne.equals("TIME")) {
 						obj = new NERObject();
 						obj.type = NERtypesEnum.TIME;
 						obj.text = word;
 						previousNe = ne;
-						tweetlist.entities.add(obj);
 					}
 				}
 			}
-			if (obj.text != null) {
+			if (obj.text != null ) {
 				tweetlist.entities.add(obj);
 			}
 		}

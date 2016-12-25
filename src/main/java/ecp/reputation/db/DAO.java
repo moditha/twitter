@@ -103,10 +103,10 @@ public class DAO {
 
 	public void saveNER(TwitterEntities e) {
 		for (int i = 0; i < e.entities.size(); i++) {
-			String cmd = "MERGE (e:entity {" + "text:'" + e.entities.get(i).text + "' })"
+			String cmd = "MERGE (e:entity {" + "text:{name} })"
 					+ "   WITH e MATCH (tw:Tweet) where id(tw)=" + e.tweetId + "   MERGE (tw)-[r:hasEntity]->(e) "
 					+ " SET e.type = '" + e.entities.get(i).type + "'";
-			session.run(cmd);
+			session.run(cmd,MapUtil.map("name", e.entities.get(i).text));
 			System.out.println(cmd);
 		}
 	}

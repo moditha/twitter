@@ -137,7 +137,7 @@ public class TestNER {
 		// do ner
 		// save back to neo4j
 		NERecognizer rec= new NERecognizer();
-		TwitterEntities ent=rec.NERrun("Please BOLO BMW 1 Series #STOLEN Last night @ Florida Road , Durban KZN Ref :SXF 708 GP Contact police if seen 10111");
+		TwitterEntities ent=rec.NERrun("Every US politician 'giving Trump a chance' is Ellis negotiating with Hans Gruber");
 		for (NERObject o : ent.entities) {
 			System.out.println(o.text + "-->" +o.type);
 		}

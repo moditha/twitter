@@ -20,7 +20,7 @@ public class TestWrite {
 		List<Status> statuses;
 		try {
 //			Paging page = new Paging(1, 500);
-			Query query = new Query("BMW");
+			Query query = new Query("trump");
 			// if(result.hasNext())//there is more pages to load
 			// {
 			// query = result.nextQuery();

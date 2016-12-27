@@ -25,48 +25,45 @@ public class DAO {
 
 	public long AddTweet(Status tweet) {
 
-		if(tweet.getLang().equals("en")){
-		String cmd = "MERGE (t:Tweet {" + "id_str:" + tweet.getId() + "} ) " + " SET t.created_at="
-				+ tweet.getCreatedAt().getTime() + " SET t.text= {text}" + " SET t.fav_cnt=" + tweet.getFavoriteCount()
-				+ " Set t.retweet_cnt=" + tweet.getRetweetCount() + " return id(t)";
-		// tweet.getRetweetCount()
-		// System.out.println(driver);
-		// System.out.println(session);
-		// System.out.println(cmd);
+		if (tweet.getLang().equals("en")) {
+			String cmd = "MERGE (t:Tweet {" + "id_str:" + tweet.getId() + "} ) " + " SET t.created_at="
+					+ tweet.getCreatedAt().getTime() + " SET t.text= {text}" + " SET t.fav_cnt="
+					+ tweet.getFavoriteCount() + " Set t.retweet_cnt=" + tweet.getRetweetCount() + " return id(t)";
+			// tweet.getRetweetCount()
+			// System.out.println(driver);
+			// System.out.println(session);
+			// System.out.println(cmd);
 
-		User u = tweet.getUser();
+			User u = tweet.getUser();
 
-		StatementResult result = session.run(cmd, MapUtil.map("text", tweet.getText()));
+			StatementResult result = session.run(cmd, MapUtil.map("text", tweet.getText()));
 
-		Record record = result.next();
-		long id = record.get("id(t)").asLong();
+			Record record = result.next();
+			long id = record.get("id(t)").asLong();
 
-		AddUserForTweet(id, u);
-		for (HashtagEntity tag : tweet.getHashtagEntities()) {
-			AddHashtagforTweet(id, tag);
-		}
+			AddUserForTweet(id, u);
+			for (HashtagEntity tag : tweet.getHashtagEntities()) {
+				AddHashtagforTweet(id, tag);
+			}
 
-		return id;
-		}
-		else{
-		System.out.println(tweet.getLang());
+			return id;
+		} else {
+			System.out.println(tweet.getLang());
 			return 0;
-		
+
 		}
 	}
 
-	public void AddRetweet(Status reTweet, Status tweet){
-		long reTweetId=AddTweet(reTweet);
-		long origTweetId=AddTweet(tweet);
-		
-		String cmd = "MATCH (tw:Tweet) where id(tw)="+origTweetId
-				+ "   WITH tw MATCH (tw1:Tweet) where id(tw1)=" + reTweetId
-				+ "   MERGE (tw)-[r:hasRetweet]->(tw1) "
-				+ " SET tw1.isRetweet=true";
-		
+	public void AddRetweet(Status reTweet, Status tweet) {
+		long reTweetId = AddTweet(reTweet);
+		long origTweetId = AddTweet(tweet);
+
+		String cmd = "MATCH (tw:Tweet) where id(tw)=" + origTweetId + "   WITH tw MATCH (tw1:Tweet) where id(tw1)="
+				+ reTweetId + "   MERGE (tw)-[r:hasRetweet]->(tw1) " + " SET tw1.isRetweet=true";
+
 		session.run(cmd);
 	}
-	
+
 	public void AddHashtagforTweet(long tweetId, HashtagEntity hashTag) {
 		// MERGE (h:Hashtag {text:"WOW"}) WITH (h) as y
 		// MATCH (tw:Tweet) where id(tw)=203
@@ -103,16 +100,18 @@ public class DAO {
 
 	public void saveNER(TwitterEntities e) {
 		for (int i = 0; i < e.entities.size(); i++) {
-			String cmd = "MERGE (e:entity {" + "text:{name} })"
-					+ "   WITH e MATCH (tw:Tweet) where id(tw)=" + e.tweetId + "   MERGE (tw)-[r:hasEntity]->(e) "
-					+ " SET e.type = '" + e.entities.get(i).type + "'";
-			session.run(cmd,MapUtil.map("name", e.entities.get(i).text));
+			String cmd = "MERGE (e:entity {" + "text:{name} })" + "   WITH e MATCH (tw:Tweet) where id(tw)=" + e.tweetId
+					+ "   MERGE (tw)-[r:hasEntity]->(e) " + " SET e.type = '" + e.entities.get(i).type + "'";
+			session.run(cmd, MapUtil.map("name", e.entities.get(i).text));
 			System.out.println(cmd);
 		}
 	}
 
 	public void AddUser(User user) {
-		String cmd = "MERGE (u:user {" + "user_id:" + user.getId() + " }) SET u.name={name}";
+		String cmd = "MERGE (u:user {" + "user_id:" + user.getId() + " }) SET u.name={name} " + "SET noFollowers="
+				+ user.getFollowersCount() + " SET noStatuses=" + user.getStatusesCount() + " SET noFriends="
+				+ user.getFriendsCount() + " SET noLists=" + user.getListedCount();
+
 		session.run(cmd, MapUtil.map("name", user.getName()));
 	}
 
@@ -120,7 +119,9 @@ public class DAO {
 		for (User user : followers) {
 			String cmd = "MERGE (u:user {" + "user_id:" + user.getId() + " })"
 					+ "   WITH u MATCH (u2:user) where (u2.user_id)=" + userId + "   MERGE (u)-[r:follows]->(u2) "
-					+ " SET u.name={name}";
+					+ " SET u.name={name} " + "SET noFollowers=" + user.getFollowersCount() + " SET noStatuses="
+					+ user.getStatusesCount() + " SET noFriends=" + user.getFriendsCount() + " SET noLists="
+					+ user.getListedCount();
 			session.run(cmd, MapUtil.map("name", user.getName()));
 		}
 	}
@@ -129,7 +130,9 @@ public class DAO {
 		for (User user : friends) {
 			String cmd = "MERGE (u:user {" + "user_id:" + user.getId() + " })"
 					+ "   WITH u MATCH (u2:user) where (u2.user_id)=" + userId + "   MERGE (u2)-[r:follows]->(u) "
-					+ " SET u.name={name}";
+					+ " SET u.name={name} " + "SET noFollowers=" + user.getFollowersCount() + " SET noStatuses="
+					+ user.getStatusesCount() + " SET noFriends=" + user.getFriendsCount() + " SET noLists="
+					+ user.getListedCount();
 			session.run(cmd, MapUtil.map("name", user.getName()));
 		}
 	}

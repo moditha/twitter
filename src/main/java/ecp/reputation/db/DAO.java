@@ -19,7 +19,7 @@ public class DAO {
 	private Session session;
 
 	public DAO() {
-		this.driver = GraphDatabase.driver("bolt://localhost", AuthTokens.basic("neo4j", "neo4jj"));
+		this.driver = GraphDatabase.driver("bolt://localhost", AuthTokens.basic("neo4j", "1234"));
 		this.session = driver.session();
 	}
 

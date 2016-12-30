@@ -19,7 +19,7 @@ public class DAO {
 	private Session session;
 
 	public DAO() {
-		this.driver = GraphDatabase.driver("bolt://localhost", AuthTokens.basic("neo4j", "1234"));
+		this.driver = GraphDatabase.driver("bolt://localhost", AuthTokens.basic("neo4j", "neo4jj"));
 		this.session = driver.session();
 	}
 
@@ -80,7 +80,9 @@ public class DAO {
 		// u.getFollowersCount()
 		// u.getFriendsCount()
 		String cmd = "MERGE (u:user {" + "user_id:" + u.getId() + " })" + "   WITH u MATCH (tw:Tweet) where id(tw)="
-				+ tweetId + "   MERGE (u)-[r:tweeted]->(tw) " + " SET u.name={name}";
+				+ tweetId + "   MERGE (u)-[r:tweeted]->(tw) " + " SET u.name={name}" + "SET u.noFollowers="
+				+ u.getFollowersCount() + " SET u.noStatuses=" + u.getStatusesCount() + " SET u.noFriends="
+				+ u.getFriendsCount() + " SET u.noLists=" + u.getListedCount();
 
 		// System.out.println(cmd);
 		session.run(cmd, MapUtil.map("name", u.getName()));
@@ -108,9 +110,9 @@ public class DAO {
 	}
 
 	public void AddUser(User user) {
-		String cmd = "MERGE (u:user {" + "user_id:" + user.getId() + " }) SET u.name={name} " + "SET noFollowers="
-				+ user.getFollowersCount() + " SET noStatuses=" + user.getStatusesCount() + " SET noFriends="
-				+ user.getFriendsCount() + " SET noLists=" + user.getListedCount();
+		String cmd = "MERGE (u:user {" + "user_id:" + user.getId() + " }) SET u.name={name} " + " SET u.noFollowers="
+				+ user.getFollowersCount() + " SET u.noStatuses=" + user.getStatusesCount() + " SET u.noFriends="
+				+ user.getFriendsCount() + " SET u.noLists=" + user.getListedCount();
 
 		session.run(cmd, MapUtil.map("name", user.getName()));
 	}
@@ -119,8 +121,8 @@ public class DAO {
 		for (User user : followers) {
 			String cmd = "MERGE (u:user {" + "user_id:" + user.getId() + " })"
 					+ "   WITH u MATCH (u2:user) where (u2.user_id)=" + userId + "   MERGE (u)-[r:follows]->(u2) "
-					+ " SET u.name={name} " + "SET noFollowers=" + user.getFollowersCount() + " SET noStatuses="
-					+ user.getStatusesCount() + " SET noFriends=" + user.getFriendsCount() + " SET noLists="
+					+ " SET u.name={name} " + "SET u.noFollowers=" + user.getFollowersCount() + " SET u.noStatuses="
+					+ user.getStatusesCount() + " SET u.noFriends=" + user.getFriendsCount() + " SET u.noLists="
 					+ user.getListedCount();
 			session.run(cmd, MapUtil.map("name", user.getName()));
 		}
@@ -130,8 +132,8 @@ public class DAO {
 		for (User user : friends) {
 			String cmd = "MERGE (u:user {" + "user_id:" + user.getId() + " })"
 					+ "   WITH u MATCH (u2:user) where (u2.user_id)=" + userId + "   MERGE (u2)-[r:follows]->(u) "
-					+ " SET u.name={name} " + "SET noFollowers=" + user.getFollowersCount() + " SET noStatuses="
-					+ user.getStatusesCount() + " SET noFriends=" + user.getFriendsCount() + " SET noLists="
+					+ " SET u.name={name} " + "SET u.noFollowers=" + user.getFollowersCount() + " SET u.noStatuses="
+					+ user.getStatusesCount() + " SET u.noFriends=" + user.getFriendsCount() + " SET u.noLists="
 					+ user.getListedCount();
 			session.run(cmd, MapUtil.map("name", user.getName()));
 		}

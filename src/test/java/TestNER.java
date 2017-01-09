@@ -137,7 +137,7 @@ public class TestNER {
 		// do ner
 		// save back to neo4j
 		NERecognizer rec= new NERecognizer();
-		TwitterEntities ent=rec.NERrun("Every US politician 'giving Trump a chance' is Ellis negotiating with Hans Gruber");
+		TwitterEntities ent=rec.NERrun(" #TrumpTrain by Rick  https://t.co/mW0YLUk6aZ");
 		for (NERObject o : ent.entities) {
 			System.out.println(o.text + "-->" +o.type);
 		}

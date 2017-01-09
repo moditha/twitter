@@ -9,7 +9,7 @@ import twitter4j.User;
 
 public class TwitterDownloader {
 
-	Twitter twitter = TwitterFactory.getSingleton();
+	public Twitter twitter = TwitterFactory.getSingleton();
 
 	public Status getTweetWithId(long id) {
 		Status s = null;

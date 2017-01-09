@@ -19,7 +19,7 @@ public class DAO {
 	private Session session;
 
 	public DAO() {
-		this.driver = GraphDatabase.driver("bolt://localhost", AuthTokens.basic("neo4j", "neo4jj"));
+		this.driver = GraphDatabase.driver("bolt://localhost", AuthTokens.basic("neo4j", "1234"));
 		this.session = driver.session();
 	}
 
@@ -105,7 +105,7 @@ public class DAO {
 			String cmd = "MERGE (e:entity {" + "text:{name} })" + "   WITH e MATCH (tw:Tweet) where id(tw)=" + e.tweetId
 					+ "   MERGE (tw)-[r:hasEntity]->(e) " + " SET e.type = '" + e.entities.get(i).type + "'";
 			session.run(cmd, MapUtil.map("name", e.entities.get(i).text));
-			System.out.println(cmd);
+		//	System.out.println(cmd);
 		}
 	}
 
@@ -143,13 +143,13 @@ public class DAO {
 		String cmd = "MATCH (tw:Tweet) where id(tw)=" + score.tweetId + " SET tw.positive=" + score.positive
 				+ " SET tw.negative=" + score.negative;
 		session.run(cmd);
-		System.out.println(cmd);
+		//System.out.println(cmd);
 	}
 
 	public ArrayList<Long> getNoScoreTweets() {
 		String cmd = "MATCH (n:Tweet) WHERE NOT EXISTS(n.positive) AND NOT EXISTS(n.negative) return id(n)";
 		StatementResult result = session.run(cmd);
-		System.out.println(cmd);
+		//System.out.println(cmd);
 		ArrayList<Long> idtweets = new ArrayList<Long>();
 		while (result.hasNext()) {
 			Record record = result.next();
@@ -157,6 +157,12 @@ public class DAO {
 			// text= record.get( "n.text" ).asString();
 		}
 		return idtweets;
+	}
+	
+	public void saveManualAnnotation (long tweetId, int annotation){
+		String cmd = "MATCH (n:Tweet)where id(n)= " + tweetId + " SET n.annotation=" + annotation;
+		session.run(cmd);	
+
 	}
 
 	public void closeConnection() {

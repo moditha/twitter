@@ -15,11 +15,16 @@ public class TwitterDownloader {
 		Status s = null;
 		try {
 			s = twitter.showStatus(id);
+			return s;
 		} catch (TwitterException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return s;
 		}
-		return s;
+		finally {
+			return s;
+		}
+		
 	}
 
 	public ResponseList<User> getUserWithId(String screenNames) {

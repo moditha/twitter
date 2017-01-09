@@ -30,6 +30,6 @@ public class TweetAnalyzer {
 		SentimentScore score=scorer.getSentimentScores(tweetText);
 		score.tweetId=tweetId;
 		db.saveSentiment(score);
-		System.out.println("saving score ->"+ score.positive);
+	System.out.println("saving score ->"+ score.positive);
 	}
 }

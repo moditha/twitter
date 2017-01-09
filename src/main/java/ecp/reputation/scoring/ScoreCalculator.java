@@ -1,0 +1,70 @@
+package ecp.reputation.scoring;
+
+import java.util.List;
+
+import ecp.reputation.sentiment.SentimentScore;
+
+public class ScoreCalculator {
+
+	public void genericCalc(List<SentimentScore> scores) {
+		double positiveScore = 0.0;
+		double negativeScore = 0.0;
+		for (SentimentScore sentimentScore : scores) {
+			if (sentimentScore.overall > 0) {
+				positiveScore += sentimentScore.overall;
+			} else {
+				negativeScore += sentimentScore.overall;
+			}
+		}
+
+		double total = positiveScore + Math.abs(negativeScore);
+
+		System.out.println("overall score with is +" + positiveScore + "  " + negativeScore + " +"
+				+ positiveScore * 100 / total + " " + negativeScore * 100 / total);
+	}
+
+	public void annotatedCalc(List<SentimentScore> scores) {
+		double positiveScore = 0.0;
+		double negativeScore = 0.0;
+		for (SentimentScore sentimentScore : scores) {
+			if (sentimentScore.annotated > 0) {
+				positiveScore += sentimentScore.annotated;
+			} else {
+				negativeScore += sentimentScore.annotated;
+			}
+		}
+
+		double total = positiveScore + Math.abs(negativeScore);
+
+		System.out.println("overall score with annotated weight is +" + positiveScore + "  " + negativeScore + " +"
+				+ positiveScore * 100 / total + " " + negativeScore * 100 / total);
+	}
+
+	public void lnWeightedCalc(List<SentimentScore> scores) {
+		double positiveScore = 0.0;
+		double negativeScore = 0.0;
+		for (SentimentScore sentimentScore : scores) {
+			if (sentimentScore.overall != 0) {
+				double tempscore = (double) sentimentScore.overall;
+				if (sentimentScore.favorites > 2) {
+					tempscore = tempscore * Math.log(sentimentScore.favorites);
+				}
+				if (sentimentScore.followers > 2) {
+					tempscore = tempscore * Math.log(sentimentScore.followers);
+				}
+				if (sentimentScore.retweets > 2) {
+					tempscore = tempscore * Math.log(sentimentScore.retweets);
+				}
+				if (tempscore > 0) {
+					positiveScore += tempscore;
+				} else {
+					negativeScore += tempscore;
+				}
+			}
+		}
+		double total = positiveScore + Math.abs(negativeScore);
+
+		System.out.println("overall score with ln weight is +" + positiveScore + "  " + negativeScore + " +"
+				+ positiveScore * 100 / total + " " + negativeScore * 100 / total);
+	}
+}

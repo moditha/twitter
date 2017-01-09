@@ -19,7 +19,7 @@ public class DAO {
 	private Session session;
 
 	public DAO() {
-		this.driver = GraphDatabase.driver("bolt://localhost", AuthTokens.basic("neo4j", "1234"));
+		this.driver = GraphDatabase.driver("bolt://localhost", AuthTokens.basic("neo4j", "neo4jj"));
 		this.session = driver.session();
 	}
 
@@ -105,7 +105,7 @@ public class DAO {
 			String cmd = "MERGE (e:entity {" + "text:{name} })" + "   WITH e MATCH (tw:Tweet) where id(tw)=" + e.tweetId
 					+ "   MERGE (tw)-[r:hasEntity]->(e) " + " SET e.type = '" + e.entities.get(i).type + "'";
 			session.run(cmd, MapUtil.map("name", e.entities.get(i).text));
-		//	System.out.println(cmd);
+			// System.out.println(cmd);
 		}
 	}
 
@@ -143,13 +143,13 @@ public class DAO {
 		String cmd = "MATCH (tw:Tweet) where id(tw)=" + score.tweetId + " SET tw.positive=" + score.positive
 				+ " SET tw.negative=" + score.negative;
 		session.run(cmd);
-		//System.out.println(cmd);
+		// System.out.println(cmd);
 	}
 
 	public ArrayList<Long> getNoScoreTweets() {
 		String cmd = "MATCH (n:Tweet) WHERE NOT EXISTS(n.positive) AND NOT EXISTS(n.negative) return id(n)";
 		StatementResult result = session.run(cmd);
-		//System.out.println(cmd);
+		// System.out.println(cmd);
 		ArrayList<Long> idtweets = new ArrayList<Long>();
 		while (result.hasNext()) {
 			Record record = result.next();
@@ -158,11 +158,32 @@ public class DAO {
 		}
 		return idtweets;
 	}
-	
-	public void saveManualAnnotation (long tweetId, int annotation){
-		String cmd = "MATCH (n:Tweet)where id(n)= " + tweetId + " SET n.annotation=" + annotation;
-		session.run(cmd);	
 
+	public void saveManualAnnotation(long tweetId, int annotation) {
+		String cmd = "MATCH (n:Tweet)where id(n)= " + tweetId + " SET n.annotation=" + annotation;
+		session.run(cmd);
+		// session.
+	}
+
+	public List<SentimentScore> getScores() {
+		String cmd = "MATCH p=(u:user)-[r:tweeted]->(n:Tweet)where  EXISTS(n.annotation) AND NOT EXISTS(n.isRetweet) "
+				+ "return n.positive,n.negative,n.retweet_cnt,n.fav_cnt,u.noFollowers,n.annotation";
+		StatementResult result = session.run(cmd);
+		// System.out.println(cmd);
+		ArrayList<SentimentScore> scores = new ArrayList<SentimentScore>();
+		while (result.hasNext()) {
+			Record record = result.next();
+			SentimentScore score = new SentimentScore();
+			score.positive = record.get("n.positive").asInt();
+			score.negative = record.get("n.negative").asInt();
+			score.overall = score.positive > Math.abs(score.negative) ? score.positive : score.negative;
+			score.retweets = record.get("n.retweet_cnt").asInt();
+			score.favorites = record.get("n.fav_cnt").asInt();
+			score.followers = record.get("u.noFollowers").asInt();
+			score.annotated = record.get("n.annotation").asInt();
+			scores.add(score);
+		}
+		return scores;
 	}
 
 	public void closeConnection() {

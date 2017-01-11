@@ -11,7 +11,10 @@ public class TestScoreCalc {
 		DAO d = new DAO();
 		List<SentimentScore> scores = d.getScores();
 		cal.annotatedCalc(scores);
+		cal.lnWeightedAnnotatedCalc(scores);	
+		cal.lnplusWeightedAnnotatedCalc(scores);
 		cal.genericCalc(scores);
 		cal.lnWeightedCalc(scores);
+		cal.lnplusWeightedCalc(scores);
 	}
 }

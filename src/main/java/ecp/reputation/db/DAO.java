@@ -176,7 +176,7 @@ public class DAO {
 			SentimentScore score = new SentimentScore();
 			score.positive = record.get("n.positive").asInt();
 			score.negative = record.get("n.negative").asInt();
-			score.overall = score.positive > Math.abs(score.negative) ? score.positive : score.negative;
+			score.overall = score.positive + score.negative;
 			score.retweets = record.get("n.retweet_cnt").asInt();
 			score.favorites = record.get("n.fav_cnt").asInt();
 			score.followers = record.get("u.noFollowers").asInt();

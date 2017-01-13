@@ -13,8 +13,10 @@ public class TestScoreCalc {
 		cal.annotatedCalc(scores);
 		cal.lnWeightedAnnotatedCalc(scores);	
 		cal.lnplusWeightedAnnotatedCalc(scores);
+		cal.annotatedRatioCalc(scores);
 		cal.genericCalc(scores);
 		cal.lnWeightedCalc(scores);
 		cal.lnplusWeightedCalc(scores);
+		cal.RatioCalc(scores);
 	}
 }

@@ -159,14 +159,15 @@ public class ScoreCalculator {
 				double tempscore = (double) sentimentScore.overall;
 				if (sentimentScore.followers > 0) {
 					if (sentimentScore.favorites > 0) {
-						coefficient = sentimentScore.favorites / sentimentScore.followers;
+						coefficient = (double) sentimentScore.favorites / (double) sentimentScore.followers;
 					}
 					if (sentimentScore.retweets > 0) {
-						coefficient = coefficient + sentimentScore.retweets / sentimentScore.followers;
+						coefficient = coefficient
+								+ (double) sentimentScore.retweets / (double) sentimentScore.followers;
 					}
 				}
 				if (coefficient > 0) {
-					tempscore = tempscore * 1 + coefficient;
+					tempscore = tempscore * (1 + coefficient);
 				}
 				if (tempscore > 0) {
 					positiveScore += tempscore;
@@ -180,6 +181,7 @@ public class ScoreCalculator {
 		System.out.println("annotated score with ratio is +" + positiveScore + "  " + negativeScore + " +"
 				+ positiveScore * 100 / total + " " + negativeScore * 100 / total);
 	}
+
 	public void RatioCalc(List<SentimentScore> scores) {
 		double positiveScore = 0.0;
 		double negativeScore = 0.0;
@@ -189,14 +191,15 @@ public class ScoreCalculator {
 				double tempscore = (double) sentimentScore.overall;
 				if (sentimentScore.followers > 0) {
 					if (sentimentScore.favorites > 0) {
-						coefficient = sentimentScore.favorites / sentimentScore.followers;
+						coefficient = (double) sentimentScore.favorites / (double) sentimentScore.followers;
 					}
 					if (sentimentScore.retweets > 0) {
-						coefficient = coefficient + sentimentScore.retweets / sentimentScore.followers;
+						coefficient = coefficient
+								+ (double) sentimentScore.retweets / (double) sentimentScore.followers;
 					}
 				}
 				if (coefficient > 0) {
-					tempscore = tempscore * 1 + coefficient;
+					tempscore = tempscore * (1 + coefficient);
 				}
 				if (tempscore > 0) {
 					positiveScore += tempscore;

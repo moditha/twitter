@@ -18,7 +18,7 @@ public class TweetAnalyzer {
 	}
 	
 	public void saveTweetEntities(long tweetId){
-		String tweetText=db.getTweet(tweetId);
+		String tweetText=db.removeUrl(db.getTweet(tweetId));
 		TwitterEntities tweetNER = NERtweet.NERrun(tweetText);
 		tweetNER.tweetId = tweetId;
 //		System.out.println(tweetNER.entities.get(0).text);
@@ -26,7 +26,7 @@ public class TweetAnalyzer {
 	}
 	
 	public void saveTweetSentiment(long tweetId){
-		String tweetText=db.getTweet(tweetId);
+		String tweetText=db.removeUrl(db.getTweet(tweetId));
 		SentimentScore score=scorer.getSentimentScores(tweetText);
 		score.tweetId=tweetId;
 		db.saveSentiment(score);

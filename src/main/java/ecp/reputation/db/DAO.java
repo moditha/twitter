@@ -8,6 +8,8 @@ import ecp.reputation.sentiment.SentimentScore;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.neo4j.driver.v1.*;
 import twitter4j.HashtagEntity;
@@ -22,6 +24,19 @@ public class DAO {
 		this.driver = GraphDatabase.driver("bolt://localhost", AuthTokens.basic("neo4j", "neo4jj"));
 		this.session = driver.session();
 	}
+	
+	public String removeUrl(String commentstr)
+    {
+        String urlPattern = "((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)";
+        Pattern p = Pattern.compile(urlPattern,Pattern.CASE_INSENSITIVE);
+        Matcher m = p.matcher(commentstr);
+        int i = 0;
+        while (m.find()) {
+            commentstr = commentstr.replaceAll(m.group(i),"").trim();
+            i++;
+        }
+        return commentstr;
+    }
 
 	public long AddTweet(Status tweet) {
 
@@ -166,7 +181,7 @@ public class DAO {
 	}
 
 	public List<SentimentScore> getScores() {
-		String cmd = "MATCH p=(u:user)-[r:tweeted]->(n:Tweet)where  EXISTS(n.annotation) AND NOT EXISTS(n.isRetweet) "
+		String cmd = "MATCH p=(u:user)-[r:tweeted]->(n:Tweet)where NOT EXISTS(n.isRetweet) "
 				+ "return n.positive,n.negative,n.retweet_cnt,n.fav_cnt,u.noFollowers,n.annotation";
 		StatementResult result = session.run(cmd);
 		// System.out.println(cmd);
@@ -180,7 +195,7 @@ public class DAO {
 			score.retweets = record.get("n.retweet_cnt").asInt();
 			score.favorites = record.get("n.fav_cnt").asInt();
 			score.followers = record.get("u.noFollowers").asInt();
-			score.annotated = record.get("n.annotation").asInt();
+			score.annotated = 0;//record.get("n.annotation").asInt();
 			scores.add(score);
 		}
 		return scores;

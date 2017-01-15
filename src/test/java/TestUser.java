@@ -1,4 +1,6 @@
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ecp.reputation.db.DAO;
 import twitter4j.PagableResponseList;
@@ -11,36 +13,19 @@ import twitter4j.User;
 
 public class TestUser {
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		Twitter twitter = TwitterFactory.getSingleton();
-		DAO db= new DAO();
-	    Status status;
-		List<User> statuses;
-		try {
-			Paging page = new Paging (1, 500);
-			statuses = twitter.getFollowersList(twitter.getId(),-1);
-			User u=twitter.showUser(twitter.getId());
-			db.AddUser(u);
-			//twitter.getFriendsl
-			System.out.println("Showing home timeline.");
-			int i=0;
-		    for (User status1 : statuses) {
-		    	System.out.println(status1.getName());
-		    			    }
-		    
-		    long cursor =-1L;
-		    PagableResponseList<User> friends;
-	        do {
-	            friends = twitter.getFriendsList(twitter.getId(),cursor);
-	            db.AddUserFriends(twitter.getId(), friends);
-	        } while((cursor = friends.getNextCursor())!=0 );
-		    
-		    
-		   // db.AddUserFriends(twitter.getId(), twitter.getFriendsList(twitter.getId(), -1));
-		    db.AddUserFollowers(twitter.getId(), statuses);
-		    db.closeConnection();
-		} catch (TwitterException e) {
-			e.printStackTrace();
-		}	
+	System.out.println(removeUrl("Ah ouais .... Faraday Future's new FF91 electric vehicle will cost 'less than $300,000', says CEO Jia Yueting https://t.co/CQNNFrEPgC"));
 	}
+	
+	private static String removeUrl(String commentstr)
+    {
+        String urlPattern = "((https?|ftp|gopher|telnet|file|Unsure|http):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)";
+        Pattern p = Pattern.compile(urlPattern,Pattern.CASE_INSENSITIVE);
+        Matcher m = p.matcher(commentstr);
+        int i = 0;
+        while (m.find()) {
+            commentstr = commentstr.replaceAll(m.group(i),"").trim();
+            i++;
+        }
+        return commentstr;
+    }
 }

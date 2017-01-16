@@ -31,7 +31,7 @@ public class TweetAnalyzer {
 		NERtweet = new NERecognizer();
 
 		try {
-			BufferedReader br = new BufferedReader(new FileReader("C:/SentStrength_Data/words.txt"));
+			BufferedReader br = new BufferedReader(new FileReader("C:/SentStrength_Data/Dictionary.txt"));
 			StringBuilder sb = new StringBuilder();
 			String line = br.readLine();
 			while (line != null) {
@@ -86,8 +86,8 @@ public class TweetAnalyzer {
 		while (m.find()) {
 			System.out.println("---" + m.group());
 			for (String voc : vocabulary) {
-				if (m.group().contains(voc)) {
-					hashtags.add(new TextWithIndex(voc, m.group().indexOf(voc) + i * 100, i));
+				if (m.group().toLowerCase().contains(voc)) {
+					hashtags.add(new TextWithIndex(voc, m.group().toLowerCase().indexOf(voc) + i * 100, i));
 				}
 			}
 			i++;

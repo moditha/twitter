@@ -18,5 +18,6 @@ public class TestScoreCalc {
 		cal.lnWeightedCalc(scores);
 		cal.lnplusWeightedCalc(scores);
 		cal.RatioCalc(scores);
+		cal.BetaCalc(scores);
 	}
 }

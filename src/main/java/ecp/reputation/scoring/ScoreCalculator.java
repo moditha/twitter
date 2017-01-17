@@ -213,4 +213,34 @@ public class ScoreCalculator {
 		System.out.println("score with ratio is +" + positiveScore + "  " + negativeScore + " +"
 				+ positiveScore * 100 / total + " " + negativeScore * 100 / total);
 	}
+
+	public void BetaCalc(List<SentimentScore> scores) {
+		double totalPos=0.0;
+		double totalNeg=0.0;
+		double totalPos_alt=0.0;
+		double totalNeg_alt=0.0;
+		for (SentimentScore sentimentScore : scores) {
+			if (sentimentScore.overall != 0) {
+			//	if(sentimentScore.overall>0){
+				totalPos=totalPos+(double)sentimentScore.positive+ sentimentScore.retweets* ((2*Math.pow((double)sentimentScore.positive, 2))/(((double)sentimentScore.negative+2)*((double)sentimentScore.positive+(double)sentimentScore.negative+2)+(2*(double)sentimentScore.positive)));
+				totalPos_alt=totalPos_alt+(double)sentimentScore.positive+sentimentScore.retweets*((2*Math.pow((double)sentimentScore.positive, 2))/((Math.abs((double)sentimentScore.negative+2))*((double)sentimentScore.positive+Math.abs((double)sentimentScore.negative+2))+(2*(double)sentimentScore.positive)));
+				
+				//}else{
+					totalNeg=totalNeg+(double)sentimentScore.negative+sentimentScore.retweets*((2*(double)sentimentScore.positive * (double)sentimentScore.negative)/(((double)sentimentScore.negative+2)*((double)sentimentScore.positive+(double)sentimentScore.negative+2)+(2*(double)sentimentScore.positive)));
+				
+				totalNeg_alt=totalNeg_alt+Math.abs((double)sentimentScore.negative)+sentimentScore.retweets*((2*(double)sentimentScore.positive * Math.abs((double)sentimentScore.negative))/((Math.abs((double)sentimentScore.negative+2))*((double)sentimentScore.positive+Math.abs((double)sentimentScore.negative+2))+(2*(double)sentimentScore.positive)));
+			}
+			//}
+		}
+		
+		double finalScore=(totalPos-totalNeg)/(totalPos+totalNeg+2);
+		double finalScore_alt=(totalPos_alt-totalNeg_alt)/(totalPos_alt+totalNeg_alt+2);
+		
+		System.out.println("positive "+totalPos);
+		System.out.println("positive alt "+totalPos_alt);
+		System.out.println("negative "+totalNeg);
+		System.out.println("negative alt"+totalNeg_alt);
+		System.out.println("final "+finalScore+ " or "+ (totalPos+totalNeg)/(totalPos+totalNeg+2)+ " or "  +(totalPos+totalNeg)/(totalPos-totalNeg+2));
+		System.out.println("final alt "+finalScore_alt+ " or "+ (totalPos_alt+totalNeg_alt)/(totalPos+totalNeg_alt+2)+ " or "+ (totalPos_alt+totalNeg_alt)/(totalPos-totalNeg_alt+2));
+	}
 }

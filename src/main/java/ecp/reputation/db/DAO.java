@@ -8,6 +8,8 @@ import ecp.reputation.sentiment.SentimentScore;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.neo4j.driver.v1.*;
 import twitter4j.HashtagEntity;

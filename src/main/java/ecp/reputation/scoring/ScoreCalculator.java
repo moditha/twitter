@@ -223,12 +223,12 @@ public class ScoreCalculator {
 			if (sentimentScore.overall != 0) {
 			//	if(sentimentScore.overall>0){
 				totalPos=totalPos+(double)sentimentScore.positive+ sentimentScore.retweets* ((2*Math.pow((double)sentimentScore.positive, 2))/(((double)sentimentScore.negative+2)*((double)sentimentScore.positive+(double)sentimentScore.negative+2)+(2*(double)sentimentScore.positive)));
-				totalPos_alt=totalPos_alt+(double)sentimentScore.positive+sentimentScore.retweets*((2*Math.pow((double)sentimentScore.positive, 2))/((Math.abs((double)sentimentScore.negative+2))*((double)sentimentScore.positive+Math.abs((double)sentimentScore.negative+2))+(2*(double)sentimentScore.positive)));
+				totalPos_alt=totalPos_alt+(double)sentimentScore.positive+sentimentScore.retweets*((2*Math.pow((double)sentimentScore.positive, 2))/((Math.abs((double)sentimentScore.negative)+2)*((double)sentimentScore.positive+Math.abs((double)sentimentScore.negative)+2)+(2*(double)sentimentScore.positive)));
 				
 				//}else{
 					totalNeg=totalNeg+(double)sentimentScore.negative+sentimentScore.retweets*((2*(double)sentimentScore.positive * (double)sentimentScore.negative)/(((double)sentimentScore.negative+2)*((double)sentimentScore.positive+(double)sentimentScore.negative+2)+(2*(double)sentimentScore.positive)));
 				
-				totalNeg_alt=totalNeg_alt+Math.abs((double)sentimentScore.negative)+sentimentScore.retweets*((2*(double)sentimentScore.positive * Math.abs((double)sentimentScore.negative))/((Math.abs((double)sentimentScore.negative+2))*((double)sentimentScore.positive+Math.abs((double)sentimentScore.negative+2))+(2*(double)sentimentScore.positive)));
+				totalNeg_alt=totalNeg_alt+Math.abs((double)sentimentScore.negative)+sentimentScore.retweets*((2*(double)sentimentScore.positive * Math.abs((double)sentimentScore.negative))/((Math.abs((double)sentimentScore.negative)+2)*((double)sentimentScore.positive+Math.abs((double)sentimentScore.negative)+2)+(2*(double)sentimentScore.positive)));
 			}
 			//}
 		}
@@ -242,5 +242,32 @@ public class ScoreCalculator {
 		System.out.println("negative alt"+totalNeg_alt);
 		System.out.println("final "+finalScore+ " or "+ (totalPos+totalNeg)/(totalPos+totalNeg+2)+ " or "  +(totalPos+totalNeg)/(totalPos-totalNeg+2));
 		System.out.println("final alt "+finalScore_alt+ " or "+ (totalPos_alt+totalNeg_alt)/(totalPos+totalNeg_alt+2)+ " or "+ (totalPos_alt+totalNeg_alt)/(totalPos-totalNeg_alt+2));
+	}
+	
+	public void positiveNegativeRatioCalc(List<SentimentScore> scores) {
+		double positiveScore = 0.0;
+		double negativeScore = 0.0;
+		for (SentimentScore sentimentScore : scores) {
+			if (sentimentScore.overall > 0) {
+				if (sentimentScore.favorites > 0 && sentimentScore.followers > 0) {
+					positiveScore = positiveScore + (1+(double) sentimentScore.favorites
+							/ (double) sentimentScore.followers )* (double) sentimentScore.overall;
+				} else {
+					positiveScore = positiveScore + sentimentScore.overall;
+				}
+			}
+			if (sentimentScore.overall < 0) {
+				if (sentimentScore.favorites > 0 && sentimentScore.followers > 0) {
+					positiveScore = positiveScore + 1+((double) sentimentScore.retweets
+							/ (double) sentimentScore.followers) * (double) sentimentScore.overall;
+				} else {
+					negativeScore = negativeScore + sentimentScore.overall;
+				}
+			}
+		}
+		double total = positiveScore + Math.abs(negativeScore);
+
+		System.out.println("score with negative positive ratio is +" + positiveScore + "  " + negativeScore + " +"
+				+ positiveScore * 100 / total + " " + negativeScore * 100 / total);
 	}
 }

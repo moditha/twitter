@@ -159,10 +159,10 @@ public class ScoreCalculator {
 				double tempscore = (double) sentimentScore.overall;
 				if (sentimentScore.followers > 0) {
 					if (sentimentScore.favorites > 0) {
-						coefficient = sentimentScore.favorites / sentimentScore.followers;
+						coefficient = (double)sentimentScore.favorites / (double)sentimentScore.followers;
 					}
 					if (sentimentScore.retweets > 0) {
-						coefficient = coefficient + sentimentScore.retweets / sentimentScore.followers;
+						coefficient = coefficient + (double)sentimentScore.retweets /(double) sentimentScore.followers;
 					}
 				}
 				if (coefficient > 0) {
@@ -189,10 +189,10 @@ public class ScoreCalculator {
 				double tempscore = (double) sentimentScore.overall;
 				if (sentimentScore.followers > 0) {
 					if (sentimentScore.favorites > 0) {
-						coefficient = sentimentScore.favorites / sentimentScore.followers;
+						coefficient = (double)sentimentScore.favorites / (double)sentimentScore.followers;
 					}
 					if (sentimentScore.retweets > 0) {
-						coefficient = coefficient + sentimentScore.retweets / sentimentScore.followers;
+						coefficient = coefficient + (double)sentimentScore.retweets / (double)sentimentScore.followers;
 					}
 				}
 				if (coefficient > 0) {
